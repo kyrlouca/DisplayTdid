@@ -1,0 +1,136 @@
+<dom-module id="k-threadList">
+  <link rel="import" href="../../bower_components/polymer/polymer.html">
+  <link rel="import" href="../../bower_components/paper-header-panel/paper-header-panel.html">
+  <link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
+  <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+  <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+
+  <link rel="import" href="../../bower_components/paper-input/paper-input.html">
+  <link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+  <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+  <link rel="import" href="../../bower_components/paper-item/paper-item.html">
+
+  <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+  <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+  <template>
+    <style include="iron-flex iron-flex-alignment">
+      .gold {
+        background-color: gold;
+      }
+
+      .green {
+        background-color: greenyellow;
+      }
+
+      .ht {
+        height: 30vh;
+      }
+
+      .ht40 {
+        height: 20vh;
+      }
+
+      .container {
+        background-color: white;
+        padding: 5px;
+        @apply(--layout-horizontal);
+        @apply(--layout-start-justified);
+
+      }
+    </style>
+    <paper-header-panel class="  gold">
+      <paper-toolbar>
+        <paper-icon-button icon="send" on-click="loadThreads"></paper-icon-button>
+        <paper-icon-button icon="home" on-click="loadTdid"></paper-icon-button>
+        <div>   Color Section </div>
+      </paper-toolbar>
+      <div class=" green ht">
+        <template is="dom-repeat" items="{{threads}}">
+
+          <paper-listbox class="container">
+            <k-item-line obj={{item}}></k-item-line>
+            <!--k-item-line obj='{"id":"FUNKIG As","title":"burdas"  }'></k-item-line-->
+
+          </paper-listbox>
+        </template>
+      </div>
+    </paper-header-panel>
+  </template>
+
+
+  <div>below tool</div>
+  </template>
+
+  <script>
+    // element registration
+    Polymer({
+      is: "k-threadList",
+
+      properties: {
+        color: {
+          type: String,
+          notify: true
+        }
+        , threads: {
+          type: Array,
+          notify: true,
+          value: function () {
+            return [];
+          }
+        }
+
+      },
+      loadThreads: function () {
+        this.threads=[];
+        this.notifyPath('threads', this.threads);
+        this.push('threads', {id: 100, title: 'first thread'});
+        this.push('threads', {id: 200, title: 'second thread'});
+        this.notifyPath('threads', this.threads);
+      },
+
+      loadTdid: function () {
+        //you will not be able to use the "this "keyword in  callbacks. Therefore assign this to that
+        var that;
+        function makeReq() {
+          if(XHR.readyState === XMLHttpRequest.DONE) {
+            //alert(XHR.responseText);
+            var obj = JSON.parse(XHR.responseText);
+            var ar1;
+            ar1 = Object.keys(obj).map(function (key) {
+              //convert object into an array which is not really necessary any more
+              //since we are using Polymer's push for each element
+                var ob = new Object();
+                ob.id = key;
+                ob.title = obj[key];
+                that.push('threads', ob);
+                return ob;
+              }
+            );
+            alert('thr'+XHR.th.length);
+            //this.threads=ar1; doesn't work
+            //that.__data__.threads=ar1;
+            //that.notifyPath('that.__data__.threads', that.threads);
+          };
+        }
+        that=this;
+        var XHR = new XMLHttpRequest();
+        XHR.onreadystatechange = makeReq;
+        XHR.open('GET', 'http://localhost:8888/tdid');
+        XHR.send();
+      },
+      ready: function () {
+        //this.set('color', 'messed up');
+        this.color = 'blue';
+      },
+      goClick: function () {
+        this.color = 'blue';
+      }
+
+    });
+
+  </script>
+
+</dom-module>

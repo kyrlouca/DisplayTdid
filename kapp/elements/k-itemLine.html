@@ -1,0 +1,52 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<dom-module id="k-item-line">
+  <template>
+    <style include="iron-flex iron-flex-alignment">
+      .box {
+        background-color: yellow;
+      }
+
+      .container {
+        background-color: yellow;
+        padding: 20px;
+        @apply(--layout-horizontal);
+        @apply(--layout-around-justified);
+
+      }
+
+      .listItem {
+        background-color: beige;
+        width: 180px;
+      }
+    </style>
+    <div class="box">
+      <list-item class="container">
+
+        <span class="listItem"> Hawb: {{obj.id}}</span>
+        <span class="listItem"> Tdid: {{obj.title}}</span>
+
+      </list-item>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'k-item-line',
+      properties: {
+        firstName: String,
+        lastName: String,
+        obj: {
+          type: Object,
+          notify: true
+
+        }
+      },
+      ready: function () {
+        //this.set('obj.att1',this.obj.att1);
+        //this.set('obj.geo','farto');
+        this.lastName = 'montana';
+      }
+    });
+  </script>
+</dom-module>
